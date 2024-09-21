@@ -1,0 +1,11 @@
+.slider-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 50px auto;
+}
+
+#Service {
+    background-color: #48cae4;
+    padding: 0 20px;
+}

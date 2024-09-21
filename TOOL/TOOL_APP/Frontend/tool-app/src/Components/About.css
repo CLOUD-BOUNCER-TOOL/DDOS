@@ -1,0 +1,24 @@
+.about-container {
+    border-radius: 10px;
+    box-shadow: 0 0 8px black;
+    display: flex;
+    padding: 0;
+}
+
+.about-left {
+    height: 50vh;
+    width: 50%;
+    margin: 15px;
+}
+
+#aboutImg {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.about-right {
+    height: 50vh;
+    width: 50%;
+    margin-right: 15px;
+}

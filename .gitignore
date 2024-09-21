@@ -1,0 +1,19 @@
+node_modules/
+# Ignore the 'Lib' directory within the '.venv' directory
+/Python/venv
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore IDE/editor configuration files
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables
+.env

@@ -1,0 +1,29 @@
+/* src/components/DataTable.css */
+
+.table-container {
+    max-height: 250px; /* Adjust the height as needed */
+    overflow-y: auto;
+    position: relative;
+}
+
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f4f4f4; /* Adjust based on your design */
+    z-index: 1;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #f4f4f4; /* Ensure the header has a background color */
+}

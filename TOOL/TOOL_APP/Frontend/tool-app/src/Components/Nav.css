@@ -1,0 +1,55 @@
+.nav-bar {
+    background-color: #014961;
+    height: 90px;
+}
+
+.list-item {
+    margin: auto 1em;
+    margin-top: 5px;
+    font-size: large;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    position: relative;
+    color: #fff;
+}
+
+.list-item:hover,
+.list-item:active {
+    color: #fff;
+}
+
+.list-item::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background-color: #ffffff;
+    visibility: hidden;
+    transition: 0.3s ease-in-out;
+}
+
+.list-item:hover::before,
+.list-item:active::before {
+    width: 100%;
+    visibility: visible;
+}
+
+#contact-btn {
+    border: none;
+    border-radius: 30px;
+    width: 8rem;
+    height: 3rem;
+    letter-spacing: 1.5px;
+    font-size: 18px;
+    background-color: #0096C7;
+    color: white;
+    justify-self: end !important;
+}
+
+#contact-btn:hover{
+    transform: scale(1.05);
+    transition: transform ease 0.3s;
+}
