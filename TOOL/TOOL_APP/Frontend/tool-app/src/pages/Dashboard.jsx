@@ -6,14 +6,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CodeIcon from '@mui/icons-material/Code';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import IpTable from "../Components/IpTable";
 import BlockedIpData from "../Components/BlockedIp";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from 'react-toastify'; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css';
-import img1 from "../../../../../../top_10_ip_addresses.png";
-import img2 from "../../../../../../requests_over_time.png";
-import img3 from "../../../../../../status_code_distribution.png";
+import img1 from "../../../../../../Python/top_10_ip_addresses.png";
+import img2 from "../../../../../../Python/requests_over_time.png";
+import img3 from "../../../../../../Python/status_code_distribution.png";
 
 
 
@@ -35,7 +34,7 @@ export default function Dashboard() {
             <div className="d-flex">
                 <div className="dash-side-bar">
                     <div className="icon">
-                        <img src="" alt="CloudBouncer" />
+                        <h5>CloudBouncer</h5>
                     </div>
                     <div className="dash-nav-link">
                         <div className="dash-links">
@@ -85,32 +84,16 @@ export default function Dashboard() {
                         <div>Dashboard</div>
                         <button style={{ border: "none", backgroundColor: "#fff" }} ><AccountCircleIcon fontSize="large" /></button>
                     </div>
-                    <div className="d-flex justify-content-between">
-                        
-                        <div className="pie">
-                            <img src={img3} alt="pie" />
-                        </div>
-                        <div className="graph">
-                            <div className="d-flex">
-                                <div className="dash-img-wrap">
-                                    <img src={img2} alt="Graph" />
-                                </div>
-                            </div>
-                        </div>
+                    <div className="graph-1">
+                        <img src={img1} alt="request_time" />
+                        <img src={img2} alt="request_time" />
                     </div>
-                    <div className="ip">
-                        <div className="block-ip">
-                            <h5 className="mt-2 mb-3">Blocked Ip</h5>
-                            <div>
-                                <BlockedIpData />
-                            </div>
+                    <div className="graph-2">
+                        <div className="blocked-ip">
+                            <h3 style={{ margin: "10px" }}>Blocked IPs</h3>
+                            <BlockedIpData />
                         </div>
-                        <div className="ip-log">
-                            <h5 className="mt-2 mb-2">Ip Logs</h5>
-                            <div className="dash-img-wrap-2">
-                                <img src={img1} alt="Graph" />
-                            </div>
-                        </div>
+                        <img src={img3} alt="" />
                     </div>
                 </div>
             </div>

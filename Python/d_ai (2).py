@@ -322,7 +322,7 @@ while True:
             if node_server_process is None or node_server_process.poll() is not None:
                 try:
                     # Start the Node.js server (tool.js)
-                    node_server_process = subprocess.Popen(["node", "D:/ddos/Main/TOOL_APP/Backend/updatedaction.js"])
+                    node_server_process = subprocess.Popen(["node", "../TOOL/TOOL_APP/Backend/updatedaction.js"])
                     print("JavaScript tool.js server started.")
                 except Exception as e:
                     print(f"Failed to start tool.js: {e}")

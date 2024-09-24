@@ -1,14 +1,11 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const { RecaptchaV2 } = require("express-recaptcha");
 const winston = require("winston");
 
 const app = express();
 const PORT = process.env.PORT || 2000;
 
-// Initialize reCAPTCHA with your keys
-const recaptcha = new RecaptchaV2("YOUR_SITE_KEY", "YOUR_SECRET_KEY"); // Replace with your actual keys
 
 // Rate Limiting Configuration
 const rateLimitWindow = 30 * 1000; // 30 seconds
@@ -66,6 +63,40 @@ const saveBlockedIPs = () => {
   );
 };
 
+// Function to insert key-value pairs into blocked_ips.json
+const insertBlockedIP = (ip, timestamp) => {
+  let blockedIPsData = [];
+
+  // Read the existing file content
+  if (fs.existsSync(blockedIPsFilePath)) {
+    try {
+      const data = fs.readFileSync(blockedIPsFilePath, "utf-8");
+      blockedIPsData = JSON.parse(data);
+    } catch (error) {
+      logger.error("Error reading blocked_ips.json file:", error);
+    }
+  }
+
+  // Add new entry
+  blockedIPsData.push({ ip, timestamp });
+
+  // Write updated content back to file
+  fs.writeFileSync(
+    blockedIPsFilePath,
+    JSON.stringify(blockedIPsData, null, 2),
+    (err) => {
+      if (err) {
+        logger.error("Error writing to blocked_ips.json file:", err);
+      } else {
+        logger.info("Blocked IP added to blocked_ips.json file.");
+      }
+    }
+  );
+};
+
+// Example usage
+insertBlockedIP("192.168.1.4:5173", "2024-09-19T19:18:52.785Z");
+
 // Function to analyze logs from logs.json and block IPs based on request threshold
 const analyzeLogs = () => {
   if (!fs.existsSync(logFilePath)) {
@@ -73,18 +104,24 @@ const analyzeLogs = () => {
     return;
   }
 
-  const logContent = fs.readFileSync(logFilePath, "utf-8").trim(); // Trim whitespace
+  let logContent = fs.readFileSync(logFilePath, "utf-8").trim();
 
   if (!logContent) {
     logger.warn("logs.json is empty, skipping analysis.");
     return;
   }
 
-  const logEntries = logContent.split(",\n").filter(Boolean); // Split by newline and filter empty entries
-  let logData;
+  // Wrap the log content in an array to ensure valid JSON format
+  if (!logContent.startsWith('[')) {
+    logContent = '[' + logContent;
+  }
+  if (!logContent.endsWith(']')) {
+    logContent += ']';
+  }
 
+  let logData;
   try {
-    logData = logEntries.map((entry) => JSON.parse(entry)); // Parse each log entry
+    logData = JSON.parse(logContent);
   } catch (error) {
     logger.error("Failed to parse logs.json: Invalid JSON format.", error);
     return;
@@ -125,35 +162,6 @@ app.use((req, res, next) => {
       .send("Your IP has been blocked due to too many requests.");
   }
   next();
-});
-
-// CAPTCHA Route and Verification
-app.get("/captcha", recaptcha.middleware.render, (req, res) => {
-  res.send(`
-    <form action="/verify-captcha" method="post">
-      ${res.recaptcha}
-      <button type="submit">Submit</button>
-    </form>
-  `);
-});
-
-// Serve tools.html at the /tool path
-app.get("/tool", (req, res) => {
-  res.sendFile(path.join(__dirname, "tools.html"));
-});
-
-// Verification for reCAPTCHA
-app.post("/verify-captcha", recaptcha.middleware.verify, (req, res) => {
-  const ip = req.ip;
-  if (!req.recaptcha.error) {
-    logger.info("CAPTCHA passed");
-    blockedIPs.delete(ip); // Unblock IP if CAPTCHA passed
-    saveBlockedIPs(); // Save to JSON file
-    res.send("CAPTCHA passed, you are now whitelisted.");
-  } else {
-    logger.warn("CAPTCHA failed");
-    res.send("CAPTCHA failed");
-  }
 });
 
 // Load blocked IPs from file at server start

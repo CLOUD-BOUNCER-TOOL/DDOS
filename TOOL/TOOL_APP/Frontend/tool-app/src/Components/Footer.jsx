@@ -13,7 +13,7 @@ export default function Footer() {
             <div id="footer">
                 <Container fluid className="p-5 d-flex justify-content-evenly" >
                     <div className="logo">
-                        <img src="" alt="CloudBouncer" />
+                        <h3>CloudBouncer</h3>
                         <div className="d-flex justify-content-evenly ">
                             <li><a href="#"></a><FacebookIcon /></li>
                             <li><a href="#"></a><InstagramIcon /></li>

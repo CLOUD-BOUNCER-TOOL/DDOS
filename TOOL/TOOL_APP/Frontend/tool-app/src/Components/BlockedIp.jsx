@@ -1,10 +1,9 @@
 import { Table, Button } from "react-bootstrap";
 import React, { useState, useEffect } from 'react';
-import Log from "../../../../../logs/blocked_ips.json";
 import DeleteIcon from '@mui/icons-material/Delete';
+import axiosInstance from "../utils/axiosInstance";
 import './IpTable.css';
 
-// Function to format ISO string to a readable date-time format
 const formatDateTime = (isoString) => {
     const options = {
         year: 'numeric', month: 'long', day: 'numeric',
@@ -14,7 +13,6 @@ const formatDateTime = (isoString) => {
     return new Date(isoString).toLocaleString(undefined, options);
 };
 
-// Function to handle delete action
 const handleDelete = (ip, data, setData) => {
     const updatedData = data.filter(entry => entry.ip !== ip);
     setData(updatedData);
@@ -22,14 +20,25 @@ const handleDelete = (ip, data, setData) => {
 
 const BlockedIpData = () => {
     const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        setData(Log);
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get("/blockedIps");
+                setData(response.data);
+            } catch (error) {
+                setError("Error while fetching Blocked IPs");
+            }
+        };
+
+        fetchData();
     }, []);
 
     return (
         <div className="table-container m-2">
-            <Table striped bordered hover>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <Table>
                 <thead>
                     <tr>
                         <th>No.</th>
@@ -43,7 +52,7 @@ const BlockedIpData = () => {
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{entry.ip}</td>
-                            <td>{formatDateTime(entry.date_time)}</td>
+                            <td>{formatDateTime(entry.timestamp)}</td>
                             <td>
                                 <Button
                                     variant="danger"
