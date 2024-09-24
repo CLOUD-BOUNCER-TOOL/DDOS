@@ -7,10 +7,14 @@ import Home from "../Components/Home";
 
 import axiosInstance from "../utils/axiosInstance";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 
 export default function LandingPage() {
     const [data, setData] = useState(null);
 
+    const navigate = useNavigate();
+
+    
     useEffect(() => {
         axiosInstance
             .get('/') // Adjust the endpoint as necessary
@@ -20,6 +24,14 @@ export default function LandingPage() {
             .catch((error) => {
                 console.error(error);
             });
+
+            const navigatetoDenied = () => {
+                setInterval(()=> {
+                    navigate("/denied");
+                }, 2000);
+            }
+
+            navigatetoDenied();
     }, []);
     
     return (
