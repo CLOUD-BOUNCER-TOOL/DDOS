@@ -28,7 +28,7 @@ export default function LandingPage() {
             const navigatetoDenied = () => {
                 setInterval(()=> {
                     navigate("/denied");
-                }, 2000);
+                }, 4000);
             }
 
             navigatetoDenied();
