@@ -6,11 +6,10 @@ const winston = require("winston");
 const app = express();
 const PORT = process.env.PORT || 2000;
 
-
 // Rate Limiting Configuration
 const rateLimitWindow = 30 * 1000; // 30 seconds
 const requestThreshold = 10; // 10 requests in the window
-const logDirectory = path.join(__dirname,"../../", "logs");
+const logDirectory = path.join(__dirname, "../../", "logs");
 const logFilePath = path.join(logDirectory, "logs.json");
 const blockedIPsFilePath = path.join(logDirectory, "blocked_ips.json");
 const ipRequestCounts = {};
@@ -39,7 +38,7 @@ const loadBlockedIPs = () => {
     try {
       const data = fs.readFileSync(blockedIPsFilePath, "utf-8");
       const blockedData = JSON.parse(data);
-      blockedData.forEach((ip) => blockedIPs.add(ip)); // Add to in-memory set
+      blockedData.forEach((entry) => blockedIPs.add(entry.ip)); // Add to in-memory set
       logger.info("Blocked IPs loaded from file.");
     } catch (error) {
       logger.error("Error loading blocked IPs from JSON file:", error);
@@ -49,7 +48,10 @@ const loadBlockedIPs = () => {
 
 // Save blocked IPs to JSON file
 const saveBlockedIPs = () => {
-  const blockedData = Array.from(blockedIPs);
+  const blockedData = Array.from(blockedIPs).map((ip) => ({
+    ip,
+    timestamp: new Date().toISOString(),
+  }));
   fs.writeFile(
     blockedIPsFilePath,
     JSON.stringify(blockedData, null, 2),
@@ -64,7 +66,7 @@ const saveBlockedIPs = () => {
 };
 
 // Function to insert key-value pairs into blocked_ips.json
-const insertBlockedIP = (ip, timestamp) => {
+const insertBlockedIP = (ip) => {
   let blockedIPsData = [];
 
   // Read the existing file content
@@ -78,6 +80,7 @@ const insertBlockedIP = (ip, timestamp) => {
   }
 
   // Add new entry
+  const timestamp = new Date().toISOString();
   blockedIPsData.push({ ip, timestamp });
 
   // Write updated content back to file
@@ -94,8 +97,6 @@ const insertBlockedIP = (ip, timestamp) => {
   );
 };
 
-// Example usage
-insertBlockedIP("192.168.1.4:5173", "2024-09-19T19:18:52.785Z");
 
 // Function to analyze logs from logs.json and block IPs based on request threshold
 const analyzeLogs = () => {
@@ -112,11 +113,11 @@ const analyzeLogs = () => {
   }
 
   // Wrap the log content in an array to ensure valid JSON format
-  if (!logContent.startsWith('[')) {
-    logContent = '[' + logContent;
+  if (!logContent.startsWith("[")) {
+    logContent = "[" + logContent;
   }
-  if (!logContent.endsWith(']')) {
-    logContent += ']';
+  if (!logContent.endsWith("]")) {
+    logContent += "]";
   }
 
   let logData;
@@ -142,7 +143,7 @@ const analyzeLogs = () => {
     if (ipRequestCounts[ip].length > requestThreshold) {
       if (!blockedIPs.has(ip)) {
         blockedIPs.add(ip); // Add IP to in-memory blocked set
-        saveBlockedIPs(); // Save to JSON file
+        insertBlockedIP(ip); // Log to JSON file
         logger.warn(`Blocked IP due to rate limit: ${ip}`);
       }
     }

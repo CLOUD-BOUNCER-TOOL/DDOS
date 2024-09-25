@@ -8,32 +8,36 @@ import Home from "../Components/Home";
 import axiosInstance from "../utils/axiosInstance";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import axios from 'axios';
 
 export default function LandingPage() {
     const [data, setData] = useState(null);
-
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    
     useEffect(() => {
-        axiosInstance
-            .get('/') // Adjust the endpoint as necessary
-            .then((response) => {
-                setData(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        const fetchIpAndCheck = async () => {
+            try {
+                const response = await axiosInstance.get('/');
 
-            const navigatetoDenied = () => {
-                setInterval(()=> {
-                    navigate("/denied");
-                }, 4000);
+                if (response.data.isBlocked) {
+                    navigate('/denied');
+                } else {
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error("Error checking IP address", error);
+                setLoading(false);
             }
+        };
 
-            navigatetoDenied();
-    }, []);
-    
+        fetchIpAndCheck();
+    }, [navigate]);
+
+    if (loading) {
+        return <div>Checking IP...</div>;
+    }
+
     return (
         <>
             <Navbar />
@@ -42,7 +46,6 @@ export default function LandingPage() {
             <Service />
             <ContactUs />
             <Footer />
-            
         </>
-    )
+    );
 }
