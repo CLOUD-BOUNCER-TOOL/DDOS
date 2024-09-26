@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const url = 'http://localhost:3000'; // Your test server URL
+const url = 'http://localhost:8000'; // Your test server URL
 
 const simulateRequest = async () => {
   try {

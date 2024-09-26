@@ -8,10 +8,8 @@ import Home from "../Components/Home";
 import axiosInstance from "../utils/axiosInstance";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import axios from 'axios';
 
 export default function LandingPage() {
-    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -20,7 +18,8 @@ export default function LandingPage() {
             try {
                 const response = await axiosInstance.get('/');
 
-                if (response.data.isBlocked) {
+                if (response.data.isBlocked == true) {
+                    console.log(response.data.isBlocked);
                     navigate('/denied');
                 } else {
                     setLoading(false);

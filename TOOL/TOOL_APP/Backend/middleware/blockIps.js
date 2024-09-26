@@ -4,7 +4,11 @@ const path = require('path');
 // const BLOCKED_IPS_FILE = path.join("TOOL/logs/", 'blocked_ips.json');
 
 function checkBlockedIp(req, res, next) {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    
+    if (ip.startsWith("::ffff:")) {
+        ip = ip.replace("::ffff:", "");
+      }
     
     fs.readFile("D:/Uploaded/Uploaded/TOOL/logs/blocked_ips.json", 'utf8', (err, data) => {
         if (err) {
@@ -16,9 +20,9 @@ function checkBlockedIp(req, res, next) {
 
         const isBlocked = (blockedIPs.some(blocked => blocked.ip === ip)) ;
         if(isBlocked){
-            res.send({isBlocked});
+            res.json({isBlocked : true});
         }else {
-            next();
+            res.json({isBlocked : false});
         }
 
     });

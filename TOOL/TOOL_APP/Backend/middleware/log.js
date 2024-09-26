@@ -29,12 +29,17 @@ const appendLogToJsonFile = (data) => {
 };
 
 // Middleware to log requests in JSON format
-function handleLog(req, res, next){
+function handleLog(req, res, next) {
+  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  if (ip.startsWith("::ffff:")) {
+    ip = ip.replace("::ffff:", "");
+  }
+
   const logEntry = {
     timestamp: new Date().toISOString(), // ISO 8601 date-time format
     method: req.method,
     url: req.url,
-    ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+    ip: ip,
     user_agent: req.headers['user-agent'],
     referrer: req.headers.referer || '',
     http_version: req.httpVersion,

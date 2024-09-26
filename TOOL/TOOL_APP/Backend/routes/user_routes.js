@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { authenticate } = require("../utilities");
 const userControllers = require("../controllers/user_controllers");
-const { checkBlockedIp } = require("../middleware/blockIps");
+const {checkBlockedIp} = require("../middleware/blockIps")
 
 router.get("/", checkBlockedIp, userControllers.handleLanding);
 router.get("/blockedIps", userControllers.handleBlockedIps);
