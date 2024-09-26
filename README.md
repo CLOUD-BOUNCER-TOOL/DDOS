@@ -3,6 +3,8 @@ Go to python folder
 
 create venv ( virtual environment)
 
+ scripts/activate 
+
 python -m pip install -r setup.txt
 
 this will set up all dependencies 
