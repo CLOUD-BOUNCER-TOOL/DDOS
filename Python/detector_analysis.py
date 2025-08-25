@@ -3,10 +3,14 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 from user_agents import parse
 
 # Define the log file path
-log_file_path = '../TOOL/logs/logs.json'
+log_file_path = os.getenv('LOGS_PATH')
 
 # Read log file
 with open(log_file_path, 'r') as f:
@@ -35,6 +39,8 @@ if 'user_agent' in df.columns:
 
 # Plot graphs
 def plot_graphs():
+    # Use environment variable for analysis images path
+    analysis_images_path = os.getenv('ANALYSIS_IMAGES_PATH')
     # Top 10 IP Addresses by Request Count
     plt.figure(figsize=(10,6))
     ip_request_count = df['ip'].value_counts().head(10)
@@ -44,7 +50,7 @@ def plot_graphs():
     plt.ylabel('Number of Requests')
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig('top_10_ip_addresses.png')
+    plt.savefig(os.path.join(analysis_images_path, 'top_10_ip_addresses.png'))
     plt.close()
 
     # Requests Over Time (Minute)
@@ -57,7 +63,7 @@ def plot_graphs():
     plt.xticks(rotation=45)
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('requests_over_time.png')
+    plt.savefig(os.path.join(analysis_images_path, 'requests_over_time.png'))
     plt.close()
 
     # Response Status Code Distribution
@@ -69,7 +75,7 @@ def plot_graphs():
         plt.xlabel('Status Code')
         plt.ylabel('Count')
         plt.tight_layout()
-        plt.savefig('status_code_distribution.png')
+        plt.savefig(os.path.join(analysis_images_path, 'status_code_distribution.png'))
         plt.close()
 
     # Top 10 User Agents
@@ -81,7 +87,7 @@ def plot_graphs():
     plt.ylabel('Number of Requests')
     plt.xticks(rotation=90)
     plt.tight_layout()
-    plt.savefig('top_10_user_agents.png')
+    plt.savefig(os.path.join(analysis_images_path, 'top_10_user_agents.png'))
     plt.close()
 
     # Request Method Distribution
@@ -92,7 +98,7 @@ def plot_graphs():
     plt.xlabel('HTTP Method')
     plt.ylabel('Count')
     plt.tight_layout()
-    plt.savefig('request_method_distribution.png')
+    plt.savefig(os.path.join(analysis_images_path, 'request_method_distribution.png'))
     plt.close()
 
     # Response Size Distribution
@@ -102,7 +108,7 @@ def plot_graphs():
     plt.xlabel('Response Size (Bytes)')
     plt.ylabel('Frequency')
     plt.tight_layout()
-    plt.savefig('response_size_distribution.png')
+    plt.savefig(os.path.join(analysis_images_path, 'response_size_distribution.png'))
     plt.close()
 
     # Distribution of OS
@@ -111,7 +117,7 @@ def plot_graphs():
     plt.pie(os_counts, labels=os_counts.index, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
     plt.title('Distribution of OS')
     plt.tight_layout()
-    plt.savefig('os_distribution.png')
+    plt.savefig(os.path.join(analysis_images_path, 'os_distribution.png'))
     plt.close()
 
 # Call the plotting function

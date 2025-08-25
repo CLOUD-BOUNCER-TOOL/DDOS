@@ -1,8 +1,7 @@
+require('dotenv').config();
 const fs = require('fs');
-const path = require('path');
-
 // const BLOCKED_IPS_FILE = path.join("TOOL/logs/", 'blocked_ips.json');
-
+const BLOCKED_IPS_FILE = process.env.BLOCKED_IPS_PATH;
 function checkBlockedIp(req, res, next) {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     
@@ -10,7 +9,7 @@ function checkBlockedIp(req, res, next) {
         ip = ip.replace("::ffff:", "");
       }
     
-    fs.readFile("D:/Uploaded/Uploaded/TOOL/logs/blocked_ips.json", 'utf8', (err, data) => {
+    fs.readFile(BLOCKED_IPS_FILE, 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading blocked IPs file:', err);
             return next();

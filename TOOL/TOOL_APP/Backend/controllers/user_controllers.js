@@ -42,6 +42,31 @@ async function handlSignUp(req, res) {
     });
 };
 
+async function deleteBlockedIp(req, res) {
+    const ipToDelete = req.params.ip;
+
+    const filePath = process.env.BLOCKED_IPS_PATH;
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to read file' });
+        }
+
+        try {
+            const jsonData = JSON.parse(data);
+            const updatedData = jsonData.filter(entry => entry.ip !== ipToDelete);
+
+            fs.writeFile(filePath, JSON.stringify(updatedData, null, 2), (writeErr) => {
+                if (writeErr) {
+                    return res.status(500).json({ error: 'Failed to write file' });
+                }
+                res.json({ message: 'IP deleted successfully' });
+            });
+        } catch (parseError) {
+            res.status(500).json({ error: 'Failed to parse JSON' });
+        }
+    });
+}
+
 async function handleLogin(req, res) {
     const { email, password } = req.body;
 
@@ -79,7 +104,7 @@ async function handleLogin(req, res) {
 };
 
 async function handleBlockedIps(req, res) {
-    const filePath = path.join("../../logs", 'blocked_ips.json');
+    const filePath = process.env.BLOCKED_IPS_PATH;
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
@@ -113,4 +138,4 @@ async function GetUser(req, res) {
     });
 };
 
-module.exports = { handlSignUp, handleLogin, GetUser, handleLanding, handleBlockedIps };
+module.exports = { handlSignUp, handleLogin, GetUser, handleLanding, handleBlockedIps, deleteBlockedIp };

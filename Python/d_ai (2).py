@@ -13,6 +13,9 @@ Libraries
 ""
 print("Detecting Started!!")
 import traceback
+from dotenv import load_dotenv
+load_dotenv()
+import os
 import os
 import signal
 import subprocess
@@ -24,8 +27,8 @@ from matplotlib import pyplot as plt
 
 """Data"""
 
-with open('./merged_data.json', 'r') as f:
-  json_log = json.load(f)
+with open(os.getenv('MERGED_DATA_PATH'), 'r') as f:
+    json_log = json.load(f)
 
 df = pd.DataFrame(json_log)
 
@@ -258,7 +261,7 @@ def update_j_test(file_path):
     global placeholders  # Declare the global placeholders
 
     # Load the latest log data
-    log_data = load_log_file(file_path)
+    log_data = load_log_file(os.getenv('LOGS_PATH'))
 
     # Get current time with UTC timezone
     current_time = datetime.now(timezone.utc)
@@ -288,7 +291,7 @@ node_server_process = None
 while True:
     try:
         # Call the update function with the correct path to your log file
-        j_test = update_j_test('D:/Uploaded/Uploaded/TOOL/logs/logs.json')
+        j_test = update_j_test(os.getenv('LOGS_PATH'))
 
         # Check if j_test is empty
         if not j_test:
@@ -310,7 +313,7 @@ while True:
 
         # Predict the cluster label using the GMM model
         cluster_label = gmm.predict(test_feature_df)
-        
+
         # Output the predicted cluster
         print(f"Predicted cluster label: {cluster_label}")
 
@@ -321,8 +324,8 @@ while True:
             # Check if the server is already running
             if node_server_process is None or node_server_process.poll() is not None:
                 try:
-                    # Start the Node.js server (tool.js)
-                    node_server_process = subprocess.Popen(["node", "../TOOL/TOOL_APP/Backend/updatedaction.js"])
+                    # Start the Node.js server (tool.js) with env path
+                    node_server_process = subprocess.Popen(["node", os.getenv('TOOL_JS_PATH')])
                     print("JavaScript tool.js server started.")
                 except Exception as e:
                     print(f"Failed to start tool.js: {e}")

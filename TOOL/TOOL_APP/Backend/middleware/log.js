@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const logDirectory = "D:/Uploaded/Uploaded/TOOL/logs";
+const logDirectory = path.join(__dirname, "../", "logs");
 if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory);
 }

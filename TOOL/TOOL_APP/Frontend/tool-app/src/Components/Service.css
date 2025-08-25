@@ -9,3 +9,14 @@
     background-color: #48cae4;
     padding: 0 20px;
 }
+@media (max-width: 900px) {
+    .slider-box {
+        flex-direction: column !important;
+        padding: 1rem;
+        margin: 20px auto !important;
+    }
+    #Service {
+        padding: 1rem !important;
+        background-color: #48cae4;
+    }
+}

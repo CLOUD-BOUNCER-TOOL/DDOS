@@ -1,34 +1,30 @@
 import { useNavigate } from "react-router";
+import { useState } from "react";
 import "./Nav.css";
 import { Container, Navbar, Nav } from 'react-bootstrap';
 
 export default function ToolNav() {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <>
-    <Navbar className="nav-bar">
-      <Container className="mb-1">
-        <Navbar.Brand style={{ color: "#caf0f8" }}>CloudBouncer</Navbar.Brand>
-        <Nav className="justify-content-center flex-grow-1">
-          <div>
+      <Navbar className="nav-bar" expand="md">
+        <Container className="mb-1">
+          <Navbar.Brand style={{ color: "#caf0f8" }}>CloudBouncer</Navbar.Brand>
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
+            <span className={menuOpen ? "hamburger-bar open" : "hamburger-bar"}></span>
+            <span className={menuOpen ? "hamburger-bar open" : "hamburger-bar"}></span>
+            <span className={menuOpen ? "hamburger-bar open" : "hamburger-bar"}></span>
+          </button>
+          <Nav className={menuOpen ? "nav-menu open" : "nav-menu"}>
             <Nav.Link className="list-item" href="/">Home</Nav.Link>
-          </div>
-          <div>
             <Nav.Link className="list-item" href="#AboutUs">About Us</Nav.Link>
-          </div>
-          <div>
             <Nav.Link className="list-item" href="#Service">Service</Nav.Link>
-          </div>
-          <div>
             <Nav.Link className="list-item" href="#Contact">Contact Us</Nav.Link>
-          </div>
-          {/* <div>
-            <Nav.Link className="list-item" href="#Subscription">Subscription Plans</Nav.Link>
-          </div> */}
-        </Nav>
-        <button id="contact-btn" onClick={() => { navigate('/login') }}>Login</button>
-      </Container>
-    </Navbar>
+            <button id="contact-btn" onClick={() => { navigate('/login') }}>Login</button>
+          </Nav>
+        </Container>
+      </Navbar>
     </>
   );
 }

@@ -13,7 +13,7 @@ const connectDb = async () => {
 connectDb();
 
 const UserSchema = new Schema({
-    name: {
+    fullName: {
         type: String
     },
     email: {

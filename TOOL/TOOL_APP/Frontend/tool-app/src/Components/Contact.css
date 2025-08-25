@@ -5,12 +5,40 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .contact-heading {
     font-weight: 700;
     font-size: 50px;
     letter-spacing: 2px;
+}
+@media (max-width: 900px) {
+    #Contact {
+        flex-direction: column !important;
+        height: auto;
+        padding: 2rem 1rem;
+        align-items: flex-start !important;
+    }
+    .contact-heading {
+        font-size: 2rem !important;
+        text-align: center;
+    }
+    .contact-btn {
+        width: 100% !important;
+        height: 3rem !important;
+        font-size: 1rem !important;
+        margin: 1rem 0;
+    }
+    .info-container {
+        height: auto !important;
+        padding: 1rem;
+        text-align: center;
+    }
+    .contact-info {
+        margin-left: 0 !important;
+        font-size: 1rem !important;
+    }
 }
 
 .contact-btn {

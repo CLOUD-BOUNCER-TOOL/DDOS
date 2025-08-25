@@ -5,6 +5,7 @@ const {checkBlockedIp} = require("../middleware/blockIps")
 
 router.get("/", checkBlockedIp, userControllers.handleLanding);
 router.get("/blockedIps", userControllers.handleBlockedIps);
+router.delete("/blockedIps/:ip", userControllers.deleteBlockedIp);
 router.post("/login", userControllers.handleLogin);
 router.post("/signup", userControllers.handlSignUp);
 router.get("/get-user", authenticate, userControllers.GetUser);

@@ -3,6 +3,7 @@
     box-shadow: 0 0 8px black;
     display: flex;
     padding: 0;
+    flex-wrap: wrap;
 }
 
 .about-left {
@@ -21,4 +22,28 @@
     height: 50vh;
     width: 50%;
     margin-right: 15px;
+}
+@media (max-width: 900px) {
+    .about-container {
+        flex-direction: column !important;
+        align-items: center;
+        padding: 1rem;
+    }
+    .about-left, .about-right {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 0 1rem 0 !important;
+        text-align: center;
+    }
+    #aboutImg {
+        max-width: 90vw;
+        height: auto;
+        margin: 0 auto;
+    }
+    .about-right h1 {
+        font-size: 2rem !important;
+    }
+    .about-right p {
+        font-size: 1rem !important;
+    }
 }

@@ -1,5 +1,5 @@
 import { Table, Button } from "react-bootstrap";
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axiosInstance from "../utils/axiosInstance";
 import './IpTable.css';
@@ -14,20 +14,33 @@ const formatDateTime = (isoString) => {
 };
 
 const handleDelete = (ip, data, setData) => {
-    const updatedData = data.filter(entry => entry.ip !== ip);
-    setData(updatedData);
+    // Call backend to delete IP
+    import('../utils/axiosInstance').then(({ default: axiosInstance }) => {
+        axiosInstance.delete(`/blockedIps/${ip}`)
+            .then(() => {
+                const updatedData = data.filter(entry => entry.ip !== ip);
+                setData(updatedData);
+            })
+            .catch(() => {
+                alert('Failed to delete IP from server');
+            });
+    });
 };
 
 const BlockedIpData = () => {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
 
+    // Delete handler wrapper for button
+    const handleDeleteClick = (ip) => {
+        handleDelete(ip, data, setData);
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axiosInstance.get("/blockedIps");
                 setData(response.data);
-            } catch (error) {
+            } catch {
                 setError("Error while fetching Blocked IPs");
             }
         };
@@ -56,7 +69,7 @@ const BlockedIpData = () => {
                             <td>
                                 <Button
                                     variant="danger"
-                                    onClick={() => handleDelete(entry.ip, data, setData)}
+                                    onClick={() => handleDeleteClick(entry.ip)}
                                 >
                                     <DeleteIcon />
                                 </Button>
